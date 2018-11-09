@@ -59,20 +59,20 @@ def print_time_until_rain(data, cutoff):
         print("%d hours until a %.2f%% chance of rain" % (hours_until_rain, cutoff))
 
 
-# REQUIRES: height, moisture, result are FLOATS (not ints), type is "a" | "m"
-# height, moisture, result must be 0.0 or 1.0, not 0 or 1
-# EFFECTS: writes to database h2woah
+# REQUIRES: height, soil, new_weight are FLOATS (not ints), type is "a" | "m"
+# height, height, soil, new_height must be 0.0 or 1.0, not 0 or 1
+# EFFECTS: writes to database h2whoah
 # MODIFIES: none
-def write_to_db(height, moisture, result, type):
+def write_to_db(height, soil, new_height, am_type):
     current_time = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
     json = [{
-		"measurement": "h2woah",
+		"measurement": "h2whoah",
                 "time": current_time,
 		"fields": {
-			"moisture": moisture,
-			"height": height,
-			"result": result,
-			"type": type
+                    "height": height,
+		    "soil": soil,
+		    "new_height": new_height,
+		    "type": am_type
 		}
     }]
     print(json)
@@ -85,7 +85,7 @@ def get_data(query):
     print("Querying data with: " + query)
     return client.query(query).raw
 
-# REQUIRES: data is the result of get_data, field_name is moisture, height, result, or type
+# REQUIRES: data is the result of get_data, field_name is soil, height, new_height, or type
 # EFFECTS: returns the value associated with the column for the FIRST point in data
 # MODIFIES: none
 def get_value(data, field_name):
@@ -99,8 +99,8 @@ if __name__ == "__main__":
     weather_json = r.json()
     print(weather_json)
     print_time_until_rain(weather_json, 0.75)
-    # write_to_db(0.5, 0.6, 0.7, "a")
+    write_to_db(0.5, 0.6, 0.7, "a")
     # print("Done writing")
-    # result = get_data("SELECT * FROM \"h2woah\" ORDER BY DESC LIMIT 1")
+    # result = get_data("SELECT * FROM \"h2whoah\" ORDER BY DESC LIMIT 1")
     # print(result)
     # print(get_value(result, "type"))
