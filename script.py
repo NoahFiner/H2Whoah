@@ -17,6 +17,9 @@ dark_sky_secret_key = "95e17b6d64e8b1389322aa122f3a03d8"
 aa_long_lat = "42.292080,-83.715855"
 texas_long_lat = "31.796573, -106.420243"
 
+#soil moisture cutoff
+SOIL_MOISTURE_CUTOFF = 0.7
+
 
 # REQUIRES: JSON from a dark sky call (see https://darksky.net/dev/docs)
 # percent chance of rain we're looking for. should be between 0 and 1.
@@ -45,6 +48,27 @@ def get_hours_until_rain(data, cutoff):
         i += 1
     return result
 
+# requires hours and days to be ints or floats
+def calculate_hours(hours, day):
+    if day == -1:
+        return -1
+    return hours + day*24
+
+def get_new_height(current_height, hours_until_rain, soil_moisture):
+    # if there isn't any rain for the next week, only distribute if the soil really needs it
+    if(hours_until_rain == -1):
+        if(soil_moisture < SOIL_MOISTURE_CUTOFF):
+            return current_height - 0.002
+        else:
+            return current_height
+
+    # conserve water if it's going to rain soon
+    elif(hours_until_rain <= 1):
+        return current_height
+    
+    # otherwise distribute an appropriate amount of water
+    else:
+        return current_height - current_height/hours_until_rain
 
 # Prints the hours or days until rain in a location for testing purposes
 def print_time_until_rain(data, cutoff):
@@ -59,15 +83,28 @@ def print_time_until_rain(data, cutoff):
         print("%d hours until a %.2f%% chance of rain" % (hours_until_rain, cutoff))
 
 
+def get_time_until_rain(data, cutoff):
+    hours_until_rain = get_hours_until_rain(data, cutoff)
+    if(hours_until_rain == -1):
+        days_until_rain = get_days_until_rain(data, cutoff)
+        if(days_until_rain == -1):
+            return -1
+        else:
+            return days_until_rain*24
+    else:
+        return hours_until_rain
+
+
 # REQUIRES: height, soil, new_weight are FLOATS (not ints), type is "a" | "m"
 # height, height, soil, new_height must be 0.0 or 1.0, not 0 or 1
+# input_time should either be the previous measurement's time (for overwriting)
+# or datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ') (for a new measurement)
 # EFFECTS: writes to database h2whoah
 # MODIFIES: none
-def write_to_db(height, soil, new_height, am_type):
-    current_time = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
+def write_to_db(height, soil, new_height, am_type, input_time):
     json = [{
 		"measurement": "h2whoah",
-                "time": current_time,
+                "time": input_time,
 		"fields": {
                     "height": height,
 		    "soil": soil,
@@ -97,10 +134,18 @@ if __name__ == "__main__":
     long_lat = aa_long_lat #modify this to whatever long_lat you want
     r = requests.get("https://api.darksky.net/forecast/%s/%s" % (dark_sky_secret_key, long_lat))
     weather_json = r.json()
-    print(weather_json)
     print_time_until_rain(weather_json, 0.75)
-    write_to_db(0.5, 0.6, 0.7, "a")
+
+    # get latest measurement
+    result = get_data("SELECT * FROM \"h2whoah\" ORDER BY DESC LIMIT 1")
+    print(result)
+    timestamp = get_value(result, "time")
+
+    # get hours until rain
+    hours_until_rain = get_hours_until_rain(weather_json, 0.75)
+
+    new_height = get_new_height(get_value(result, "height"), hours_until_rain, get_value(result, "soil"))
+    print(hours_until_rain)
+    print(new_height)
     # print("Done writing")
-    # result = get_data("SELECT * FROM \"h2whoah\" ORDER BY DESC LIMIT 1")
-    # print(result)
     # print(get_value(result, "type"))
