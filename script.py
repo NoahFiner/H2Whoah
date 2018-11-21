@@ -129,6 +129,10 @@ def get_value(data, field_name):
     index = data["series"][0]["columns"].index(field_name)
     return data["series"][0]["values"][0][index]
 
+def seed_data():
+    for i in range(0,100):
+        write_to_db(i/200, i/200+0.1, i/200+0.2, "a", datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'))
+
 if __name__ == "__main__":
     # print("Hello world")
     long_lat = aa_long_lat #modify this to whatever long_lat you want
@@ -147,5 +151,6 @@ if __name__ == "__main__":
     new_height = get_new_height(get_value(result, "height"), hours_until_rain, get_value(result, "soil"))
     print(hours_until_rain)
     print(new_height)
+
     # print("Done writing")
     # print(get_value(result, "type"))
