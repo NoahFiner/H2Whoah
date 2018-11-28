@@ -106,10 +106,10 @@ def write_to_db(height, soil, new_height, am_type, input_time):
 		"measurement": "h2whoah",
                 "time": input_time,
 		"fields": {
-                    "height": height,
-		    "soil": soil,
-		    "new_height": new_height,
-		    "type": am_type
+                    "height": round(height, 5),
+		    "soil": round(soil, 5),
+		    "new_height": round(new_height, 5),
+		    "value": am_type
 		}
     }]
     print(json)
@@ -133,6 +133,9 @@ def seed_data():
     for i in range(0,100):
         write_to_db(i/200, i/200+0.1, i/200+0.2, "a", datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'))
 
+
+
+
 if __name__ == "__main__":
     # print("Hello world")
     long_lat = aa_long_lat #modify this to whatever long_lat you want
@@ -142,15 +145,16 @@ if __name__ == "__main__":
 
     # get latest measurement
     result = get_data("SELECT * FROM \"h2whoah\" ORDER BY DESC LIMIT 1")
-    print(result)
-    timestamp = get_value(result, "time")
+    # timestamp = get_value(result, "time")
+    timestamp = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
+
 
     # get hours until rain
     hours_until_rain = get_hours_until_rain(weather_json, 0.75)
 
     new_height = get_new_height(get_value(result, "height"), hours_until_rain, get_value(result, "soil"))
-    print(hours_until_rain)
     print(new_height)
 
-    # print("Done writing")
+    write_to_db(get_value(result, "height"), get_value(result, "soil"), new_height, "a", timestamp)
+    print("Done writing")
     # print(get_value(result, "type"))

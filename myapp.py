@@ -11,19 +11,20 @@ database = 'H2WOAH'
 client = influxdb.InfluxDBClient(host=host, username=username,
                                  password=password, database=database)
 
-@app.route('/last/<lab_group>')
-def get_prev_data(number):
-    query = client.query("SELECT last(value) from /d[0-9]/ WHERE lab_group='{0}'".format(lab_group)).raw
-    result = {}
-    if 'series' in query:
-        query = query['series']
-        for point in query:
-            result.update({point['name'] : point['values'][-1][-1]})
-    return jsonify(**result)
+#@app.route('/last/<lab_group>')
+#def get_prev_data(number):
+#    query = client.query("SELECT last(value) from /d[0-9]/ WHERE lab_group='{0}'".format(lab_group)).raw
+#    result = {}
+#    if 'series' in query:
+#        query = query['series']
+#        for point in query:
+#            result.update({point['name'] : point['values'][-1][-1]})
+#    return jsonify(**result)
 
-@app.route('/')
+@app.route('/<amount>')
 def show_index():
-    return render_template('main.html')
+    query = client.query("SELECT * FROM \"h2whoah\" ORDER BY DESC LIMIT %s".format(amount).raw
+    return render_template('main.html', data=raw)
 
 # @app.route('/submit' , methods = ['POST'])
 #def submit_command():
