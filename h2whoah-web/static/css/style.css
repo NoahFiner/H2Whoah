@@ -1,0 +1,46 @@
+/* custom styles */
+@import url('https://fonts.googleapis.com/css?family=Quicksand:400,700');
+
+* {
+  font-family: "Quicksand", "Helvetica", sans-serif;
+}
+
+body {
+  background-color: green;
+}
+
+#header-logo {
+  width: auto;
+  height: 5rem;
+}
+
+.top-header > h1 {
+  font-size: 4rem;
+}
+
+.top-header > h1:first-of-type {
+  margin: 0 0.25em;
+}
+
+.top-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.graph-outer {
+  text-align: center;
+  padding: 2rem;
+}
+
+.graph-outer > h2 {
+  font-size: 2rem;
+  text-align: center;
+}
+
+.graph-outer > canvas {
+  box-shadow: 0 3px 3px rgba(0, 0, 0, 0.2);
+  width: 80%;
+  height: 20rem;
+}

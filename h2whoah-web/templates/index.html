@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+  <head lang="en">
+    <meta charset="UTF-8">
+    <title>Flask React</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/style.css"></link>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+     <script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+    <title>H2Whoah Dashboard</title>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12 top-header">
+          <img id="header-logo" src="../static/img/logo-full.png"/>
+          <h1> | </h1>
+          <h1>Dashboard</h1>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="graph-outer col-md-6">
+          <h2>Soil moisture</h2>
+          <canvas id="soil"></canvas>
+        </div>
+        <div class="graph-outer col-md-6">
+          <h2>Water level</h2>
+          <canvas id="height"></canvas>
+        </div>
+      </div>
+      <br>
+      <div>
+      	<button id="new-height-button">Set new height</button>
+      </div>
+    </div>
+    <script>
+    var data = JSON.parse('{{ data | tojson | safe}}');
+
+    var jsonsample = {'statement_id': 0, 'series': [{'name': 'h2whoah', 'columns': ['time', 'height', 'new_height', 'soil', 'type', 'value'], 'values': [['2018-11-09T21:13:45.40539831Z', 1, 1, 1, null, null], ['2018-11-09T21:22:25Z', 0.5, 0.7, 0.6, 'a', null], ['2018-11-16T19:23:26Z', 0.265, 0.465, 0.365, 'a', null], ['2018-11-16T19:23:27Z', 0.495, 0.6950000000000001, 0.595, 'a', null], ['2018-11-21T01:51:52.474563836Z', 1, 1, 1, null, null], ['2018-11-21T02:14:29.289274001Z', 1, 0.5, 1, null, null], ['2018-11-21T02:15:04.84389835Z', 0.6, 0.5, 0.7, null, null], ['2018-11-21T03:03:28Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:03:33Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:03:38Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:03:43Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:03:48Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:03:53Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:03:58Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:04:02Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:04:07Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:04:12Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:04:17Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:04:22Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:04:27Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:04:32Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:04:37Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:04:42Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:04:46Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:04:51Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:04:56Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:05:01Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:05:06Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:05:11Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:05:16Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:05:21Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:05:26Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:05:30Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:05:35Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:05:40Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:05:45Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:05:50Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:05:55Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:06:00Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:06:05Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:06:09Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:06:14Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:06:19Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:06:24Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:06:29Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:06:34Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:06:39Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:06:43Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:06:48Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:06:53Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:06:58Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:07:03Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:07:08Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:07:13Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:07:17Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:07:23Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:07:28Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:07:32Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:07:37Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:07:42Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:07:47Z', 0.1, 0.1, 0.2, null, 'a'], ['2018-11-21T03:07:52Z', 0.1, 0.1, 0.2, null, 'a']]}]}
+
+    //set jsonsample to data if we're on the server
+    jsonsample = data;
+
+    //we're only reading every other element due to how the server-side
+    //script doesn't edit the last data set but appends to it
+    var formatData = data => {
+      return data.reverse().filter((element, index) => index % 2 === 0);
+    }
+
+
+    var timestamps = jsonsample.series[0].values.map(val => moment(val[0]).valueOf());
+    readableTimestamps = timestamps.map(val => moment(val).format("LT"));
+
+    var soilMoisture = jsonsample.series[0].values.map(val => val[3]);
+    var heightValues = jsonsample.series[0].values.map(val => ((val[1] < 22.72) ? 25 - val[1] : 0));
+
+	setNewHeight = val => {
+		$.post("/override", {"new_height": val});
+	}
+
+	$(document).ready(function() {
+		$("#new-height-button").click(function() {setNewHeight(prompt("Enter a new height"))});
+	});
+
+    //readableTimestamps = formatData(readableTimestamps);
+    //soilMoisture = formatData(soilMoisture);
+    //heightValues = formatData(heightValues);
+
+    var soil = document.getElementById("soil").getContext("2d");
+    var soilChart = new Chart(soil, {
+      type: 'line',
+      data: {
+        labels: readableTimestamps,
+        datasets: [{
+          label: "Soil moisture %",
+          data: soilMoisture,
+          backgroundColor: "rgba(29, 152, 252, 0.3)"
+        }]
+      },
+      options: {
+        scales: {
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Time',
+              padding: 0
+            }
+          }],
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Percentage',
+              padding: 0
+            },
+            ticks: {
+              suggestedMin: 0,
+              suggestedMax: 1
+            },
+          }]
+        }
+      }
+    });
+
+    var height = document.getElementById("height").getContext("2d");
+    var heightChart = new Chart(height, {
+      type: 'line',
+      data: {
+        labels: readableTimestamps,
+        datasets: [{
+          label: "Water level",
+          data: heightValues,
+          backgroundColor: "rgba(29, 152, 252, 0.3)"
+        }]
+      },
+      options: {
+        scales: {
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Time',
+              padding: 0
+            }
+          }],
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Water height',
+              padding: 0
+            },
+            ticks: {
+              suggestedMin: 0,
+              suggestedMax: 25
+            },
+          }]
+        }
+      }
+    });
+    </script>
+  </body>
+</html>
