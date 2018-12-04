@@ -55,10 +55,15 @@ def calculate_hours(hours, day):
     return hours + day*24
 
 def get_new_height(current_height, hours_until_rain, soil_moisture):
+    if(current_height > 22.72):
+        print("ERROR! Current height is:")
+        print(current_height)
+        print("which is greater than 22.72")
+        current_height = 22.72
     # if there isn't any rain for the next week, only distribute if the soil really needs it
     if(hours_until_rain == -1):
         if(soil_moisture < SOIL_MOISTURE_CUTOFF):
-            return current_height - 0.002
+            return current_height + 0.002
         else:
             return current_height
 
@@ -68,7 +73,7 @@ def get_new_height(current_height, hours_until_rain, soil_moisture):
     
     # otherwise distribute an appropriate amount of water
     else:
-        return current_height - current_height/hours_until_rain
+        return current_height + (22.72-current_height)/hours_until_rain
 
 # Prints the hours or days until rain in a location for testing purposes
 def print_time_until_rain(data, cutoff):
@@ -95,7 +100,7 @@ def get_time_until_rain(data, cutoff):
         return hours_until_rain
 
 
-# REQUIRES: height, soil, new_weight are FLOATS (not ints), type is "a" | "m"
+# REQUIRE: height, soil, new_weight are FLOATS (not ints), type is "a" | "m"
 # height, height, soil, new_height must be 0.0 or 1.0, not 0 or 1
 # input_time should either be the previous measurement's time (for overwriting)
 # or datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ') (for a new measurement)
@@ -106,9 +111,9 @@ def write_to_db(height, soil, new_height, am_type, input_time):
 		"measurement": "h2whoah",
                 "time": input_time,
 		"fields": {
-                    "height": round(height, 5),
-		    "soil": round(soil, 5),
-		    "new_height": round(new_height, 5),
+                    "height": round(height, 4),
+		    "soil": round(soil, 4),
+		    "new_height": round(new_height, 4),
 		    "value": am_type
 		}
     }]
