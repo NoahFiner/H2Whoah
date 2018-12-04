@@ -2,6 +2,8 @@
 ## What is this?
 This is the back end framework for a smart stormwater irrigation barrel, or a class project I went a little overboard on. This code helps analyze raw sensor measurements (height and water level) sent from a Particle Photon and, using Dark Sky's API, return a result for how long a valve should open to release a sufficient amount of water. Additionally, there will be a webapp using a Flask server to help plot sensor data and more.
 
+See https://www.youtube.com/watch?v=lXNqRdfV0ZY for a demo.
+
 ## Files
 ### script.ino
 This file contains code for a Particle Photon to read measurements from an ultrasonic sensor and a soil moisture sensor. Additionally, the Photon can read and write to an InfluxDB hosted with AWS and communicate with the server-side script and web application.
