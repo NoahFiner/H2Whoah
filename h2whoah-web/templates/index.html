@@ -57,10 +57,11 @@
 
 
     var timestamps = jsonsample.series[0].values.map(val => moment(val[0]).valueOf());
-    readableTimestamps = timestamps.map(val => moment(val).format("LT"));
+    readableTimestamps = timestamps.map(val => moment(val).format("LT")).reverse();
 
-    var soilMoisture = jsonsample.series[0].values.map(val => val[3]);
-    var heightValues = jsonsample.series[0].values.map(val => ((val[1] < 22.72) ? 25 - val[1] : 0));
+    var soilMoisture = jsonsample.series[0].values.map(val => val[3]).reverse();
+    var heightValues = jsonsample.series[0].values.map(val => ((val[1] < 22.72) ? 25 - val[1] : 0)).reverse();
+
 
 	setNewHeight = val => {
 		$.post("/override", {"new_height": val});
@@ -132,7 +133,7 @@
           yAxes: [{
             scaleLabel: {
               display: true,
-              labelString: 'Water height',
+              labelString: 'Water height (in)',
               padding: 0
             },
             ticks: {
