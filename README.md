@@ -1,8 +1,11 @@
 # H2Whoah Smart Irrigation Barrel
-## What is this?
-This is the back end framework for a smart stormwater irrigation barrel, or a class project I went a little overboard on. This code helps analyze raw sensor measurements (height and water level) sent from a Particle Photon and, using Dark Sky's API, return a result for how long a valve should open to release a sufficient amount of water. Additionally, there will be a webapp using a Flask server to help plot sensor data and more.
 
-See https://www.youtube.com/watch?v=lXNqRdfV0ZY for a demo.
+## What is this?
+This is the back end framework for a smart stormwater irrigation barrel, or a class project I went a little (actually, more like a lot) overboard on. This code helps analyze raw sensor measurements (height and water level) sent from a Particle Photon and, using Dark Sky's API, return a result for how long a valve should open to release a sufficient amount of water. Additionally, there will be a webapp using a Flask server to help plot sensor data and more.
+
+![img_8436 2](https://user-images.githubusercontent.com/10334304/50049803-a1814a00-00bb-11e9-9dee-b450f596dc76.JPG)
+
+See https://www.youtube.com/watch?v=7rMWMYl7sOk for a demo.
 
 ## Files
 ### script.ino
