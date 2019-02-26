@@ -35,4 +35,4 @@ This file uses
 * Python's Request library
 * Dark Sky's API
 * InfluxDB's Python library
-* A crojob
+* A cronjob
